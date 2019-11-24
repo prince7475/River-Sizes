@@ -1,0 +1,140 @@
+Write a function that returns an array of the sizes of all rivers represented in the input matrix.
+Example : [
+  [1,0,0,1,0],
+  [1,0,1,0,0],
+  [0,0,1,0,1],
+  [1,0,1,0,1],
+  [1,0,1,1,0]
+]
+
+Time --> O(N) --> WH
+Space --> O(N) --> WH
+output [1,2,2,2,5]
+
+-- Created visitedMatrix // copy matrix all values are set to false
+let result = []
+loop through matrix
+  for(let i = 0; i < matrix.length; i++){
+    for(let j = 0; j < matrix[0].length; j++){
+      if(!visited[i][j] && matrix[i][j] === 1){
+        helper(i,j,matrix,result,visited)
+      }
+    }
+  }
+return result
+
+
+helper(i,j,matrix,result,visited){
+  let queue = [[i,j]]
+  let count = 0
+  while(queue.length > 0){
+    let node = queue.shift()
+    i = node[0]
+    j = node[1]
+    if(visited[i][j]) continue
+    visited[i][j] = true
+    if(matrix[i][j] === 0) continue
+    count++
+    let allNeighbors = getAllNeighbors(i,j,visited,matrix) // Helper
+    for(let neighbor of allNeighbors){
+      queue.push(neighbor)
+    }
+  }
+  
+  if(count > 0){
+    result.push(count)
+  }
+  
+}
+
+function getAllNeighbors(i,j, visited,matrix){
+let row = [i - 1, i + 1, i, i]
+let col = [j, j, j + 1, j - 1]
+let result = []
+for(let k = 0; k < row.length; k++){
+  let r = row[k]
+  let c = col[k]
+  if(r < 0 || r >= matrix.length || c < 0 || c >= matrix[0].length) continue
+  if(visited[r][c] === true || matrix[r][c] === 0) continue
+  result.push([r,c])
+}
+return result
+}
+
+
+
+
+
+function riverSizes(matrix){
+  let result = []
+  let visited = matrix.map((row) => {
+    return row.map((el) => {
+      return false
+    })
+  })
+  
+  for(let i = 0; i < matrix.length; i++){
+    for(let j = 0; j < matrix[0].length; j++){
+      if(!visited[i][j] && matrix[i][j] === 1){
+        explore(i,j,matrix,visited,result)
+      }
+    }
+  }
+  
+  return result
+}
+
+
+function explore(i,j,matrix,visited,result){
+  let count = 0
+  let queue = [[i,j]]
+  while(queue.length > 0){
+    let node = queue.shift()
+    i = node[0]
+    j = node[1]
+    if(visited[i][j]) continue
+    visited[i][j] = true
+    if(matrix[i][j] === 0) continue
+    count++
+    let allNeighbors = getAllNeighbors(i,j,matrix,visited) // helper
+    for(let neighbor of allNeighbors){
+      queue.push(neighbor)
+    }
+  }
+  
+  if(count > 0){
+    result.push(count)
+  }
+}
+
+function getAllNeighbors(i, j, matrix,visited){
+  let row = [i - 1, i + 1, i, i]
+  let col = [j, j, j - 1, j + 1]
+  let result = []
+  for(let k = 0; k < row.length; k++){
+    let r = row[k]
+    let c = col[k]
+    if(r < 0 || r >= matrix.length || c < 0 || c >= matrix[0].length) continue
+    if(visited[r][c] == true || matrix[r][c] === 0) continue
+    result.push([r,c])
+  }
+  return result
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
